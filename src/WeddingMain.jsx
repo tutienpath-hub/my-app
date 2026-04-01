@@ -1,8 +1,6 @@
 import { useState, useEffect, useRef, useCallback } from "react";
 
 // ── helpers ──────────────────────────────────────────────────────────────────
-// CRA: files in /public are served from the root.
-// Use %PUBLIC_URL% in index.html, or process.env.PUBLIC_URL in JS.
 const PUBLIC = process.env.PUBLIC_URL || "";
 
 const FIRST = Array.from({ length: 15 }, (_, i) => i + 1).map((name, index) => ({
@@ -15,8 +13,8 @@ const FIRST = Array.from({ length: 15 }, (_, i) => i + 1).map((name, index) => (
 
 const SECOND = Array.from({ length: 15 }, (_, i) => i + 1).map((name, index) => ({
   id: index + 15,
-  src: `${PUBLIC}/${name}.jpg`,
-  actualSrc: `${PUBLIC}/${name}.jpg`,
+  src: `${PUBLIC}/${name + 15}.jpg`,
+  actualSrc: `${PUBLIC}/${name + 15}.jpg`,
   loaded: true,
   retryCount: 0,
 }));
@@ -69,7 +67,13 @@ function FallingFlowers({ flowers }) {
 
 function AudioControl({ isSpinning, onToggleSpin, onToggleAudio, audioRef }) {
   return (
-    <div className="fixed top-4 right-4 z-50">
+    <div className="fixed top-4 right-4 z-50"
+      style={{
+        zIndex: 99,
+        position: "absolute",
+        right: 36,
+        top: 24
+      }}>
       <audio className="hidden" ref={audioRef} src={`${PUBLIC}/themeSong.mp3`} preload="none" loop />
       <svg
         viewBox="0 0 60 60"
@@ -94,12 +98,37 @@ function AudioControl({ isSpinning, onToggleSpin, onToggleAudio, audioRef }) {
           onToggleSpin();
           onToggleAudio();
         }}
-        className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 rounded-full"
-        style={{ outline: "none", border: "none", background: "none" }}
+        className="rounded-full"
+        style={{
+          outline: "none", border: "none", background: "none", position: "absolute",
+          top: 13, left: 15, width: 42, height: 42
+        }}
       >
-        <span className="material-icons py-1 text-4xl text-amber-700" style={{ fontSize: 36 }}>
-          {isSpinning ? "pause_circle" : "play_circle"}
+        <span className="material-icons py-1 text-4xl text-amber-700" style={{
+          fontSize: 36,
+          position: "absolute",
+          top: 0,
+          left: 0
+        }}>
+          {isSpinning ? <img
+            key="playBtn"
+            style={{
+              width: 32,
+              height: 32
+            }}
+            src={`${PUBLIC}/play-button.png`}
+            alt="flower"
+          /> : <img
+            key="playBtn"
+            style={{
+              width: 32,
+              height: 32
+            }}
+            src={`${PUBLIC}/stop-button.png`}
+            alt="flower"
+          />}
         </span>
+
       </button>
     </div>
   );
@@ -109,27 +138,33 @@ function HeroSection({ targetDate }) {
   return (
     <div
       className="relative h-screen w-full bg-cover bg-center"
-      style={{ backgroundImage: `url('${PUBLIC}/29.jpg')` }}
+      style={{
+        backgroundImage: `url('${PUBLIC}/29.jpg')`,
+        backgroundSize: "100% auto",
+        height: "140vh",
+        marginTop: "-186px"
+      }}
     >
-      <div className="absolute top-24 w-full text-white">
+      <div className="absolute top-24 w-full text-white" style={{ textAlign: "center" }}>
         <div className="flex flex-col items-center">
           <div
             style={{
               fontFamily: "var(--Hello-honey, cursive)",
               fontSize: "5rem",
               color: "#fff",
+              paddingTop: 260
             }}
           >
             Triet <span style={{ fontSize: "2.5rem" }}>❤</span> Yen
           </div>
-          <div style={{ fontSize: "3.75rem" }}>28 . 04 . 2026</div>
+          <div style={{ fontSize: "3rem", color: "white" }}>28 . 04 . 2026</div>
           <div
             style={{
               fontFamily: "var(--ovo, serif)",
               fontSize: "1.5rem",
               color: "#fff",
               marginTop: "1rem",
-              marginLeft: "4rem",
+              marginLeft: "48px"
             }}
           >
             {getDaysLeft(targetDate)} days left
@@ -143,17 +178,18 @@ function HeroSection({ targetDate }) {
 function SaveTheDateSection() {
   const calendarDays = [
     6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29,
-    30, 31,
+    30, 31, 1, 2
   ];
 
   return (
-    <div className="py-12" style={{ color: "var(--Primary, #b77b3b)" }}>
+    <div className="py-12" style={{ color: "var(--Primary, #b77b3b)", textAlign: "center" }}>
       <div className="flex flex-col items-center">
         <h1
           style={{
             fontFamily: "var(--andasia, cursive)",
             fontSize: "3rem",
             marginBottom: "1rem",
+            marginTop: "0px"
           }}
         >
           Save The Date
@@ -171,28 +207,28 @@ function SaveTheDateSection() {
           style={{ fontFamily: "var(--ovo, serif)" }}
         >
           <div style={{ fontSize: "1.25rem", letterSpacing: "4px" }}>April</div>
-          <div className="my-2 flex gap-4">
+          <div className="my-2 flex gap-4" style={{ display: "flex", alignItems: "center", justifyContent: "center" }}>
             <div
-              className="text-center"
               style={{
                 width: 150,
                 borderTop: "2px solid",
                 borderBottom: "2px solid",
-                padding: "8px 8px 8px 16px",
+                padding: "8px",
                 letterSpacing: "4px",
+                textAlign: "center",
               }}
             >
               TUESDAY
             </div>
             <div style={{ fontSize: "2.25rem" }}>28</div>
             <div
-              className="text-center"
               style={{
                 width: 150,
                 borderTop: "2px solid",
                 borderBottom: "2px solid",
-                padding: "8px 8px 8px 16px",
+                padding: "8px",
                 letterSpacing: "4px",
+                textAlign: "center",
               }}
             >
               AT 11:00 AM
@@ -272,30 +308,28 @@ function LocationSection() {
   };
 
   return (
-    <div className="text-center" style={{ fontFamily: "var(--ovo, serif)" }}>
+    <div style={{ textAlign: "center", fontFamily: "var(--ovo, serif)" }}>
       <div style={{ fontSize: "2.25rem", padding: "0.5rem 0" }}>Tư Gia</div>
       <div style={{ padding: "0 1rem" }}>337 Tổ 12, Ấp Phước Kế, Xã Mỹ Lộc, Long An</div>
-      <div className="my-6 flex justify-center" style={{ fontSize: "1.5rem" }}>
+      <div className="my-6 flex justify-center" style={{ fontSize: "1.5rem", marginBottom: "26px", marginTop: "16px" }}>
         <div
           className="flex cursor-pointer items-center justify-center rounded-lg"
           style={{ border: "2px solid", padding: "0.75rem", gap: 8 }}
           onClick={openMap}
         >
           <span
-            className="material-icons jump"
-            style={{ fontSize: 42, color: "var(--Primary, #b77b3b)" }}
-          >
-            place
-          </span>
-          <span
             style={{
-              background: "linear-gradient(to right, var(--Primary, #b77b3b) 30%, #b45309 90%)",
               WebkitBackgroundClip: "text",
-              WebkitTextFillColor: "transparent",
+              // WebkitTextFillColor: "transparent",
               fontWeight: "bold",
+              border: "1px",
+              borderRadius: "99",
+              textAlign: "center",
+              alignItems:"center",
+              width: "fit-content",
             }}
           >
-            Location
+            Vị Trí
           </span>
         </div>
       </div>
@@ -485,7 +519,7 @@ export default function WeddingMain() {
   const toggleAudio = useCallback(() => {
     const audio = audioRef.current;
     if (audio) {
-      audio.paused ? audio.play().catch(() => {}) : audio.pause();
+      audio.paused ? audio.play().catch(() => { }) : audio.pause();
     }
   }, []);
 
@@ -529,7 +563,7 @@ export default function WeddingMain() {
     }, 100);
 
     return () => observer.disconnect();
-  // eslint-disable-next-line react-hooks/exhaustive-deps
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   const loadImage = (imageId) => {
@@ -663,15 +697,15 @@ export default function WeddingMain() {
           backgroundImage: `url('${PUBLIC}/veinstone.webp')`,
           backgroundSize: "cover",
           paddingBottom: "1rem",
+          textAlign: "center",
+          // marginTop: "-32px"
         }}
       >
         <HeroSection targetDate={TARGET_DATE} />
         <SaveTheDateSection />
 
         {/* Albums */}
-        <section
-          style={{ margin: "2rem 0", fontFamily: "var(--ovo, serif)" }}
-        >
+        <section style={{ margin: "2rem 0", fontFamily: "var(--ovo, serif)" }}>
           <hr style={{ margin: "1rem auto", width: "66%", border: "2px solid var(--Primary, #b77b3b)", opacity: 0.3 }} />
           <div
             style={{
